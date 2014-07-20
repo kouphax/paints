@@ -1,2 +1,2 @@
-web: java $JVM_OPTS -cp target/paints.jar $PORT
+web: java $JVM_OPTS -jar target/paints.jar $PORT
 
