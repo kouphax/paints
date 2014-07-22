@@ -4,7 +4,8 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.adapter.jetty :refer [run-jetty]]
-            [compojure.core :refer [defroutes GET]])
+            [compojure.core :refer [defroutes GET]]
+            [ring.middleware.cors :refer [wrap-cors]])
   (:gen-class))
 
 (defrecord Paint [id title code quantity])
@@ -166,6 +167,8 @@
   (-> app
       (wrap-keyword-params)
       (wrap-params)
+      (wrap-cors :access-control-allow-origin #".*"
+                 :access-control-allow-methods [:get])
       (wrap-trace :header :ui)))
 
 (defonce server (atom nil))
