@@ -152,16 +152,17 @@
    (Paint.  "yellow"                "Yellow"                   "#FFFF00" 0)
    (Paint.  "yellowgreen"           "Yellow Green"             "#9ACD32" 0)])
 
-(defresource catalog [start size]
+(def page-size 10)
+
+(defresource catalog [page]
   :available-media-types  ["application/json"]
-  :handle-ok { :start start
-               :size  size
-               :total (count db)
-               :data  (->> db (drop start) (take size)) })
+  :handle-ok { :page page
+               :pages (int (/ (count db) page-size))
+               :data  (->> db (drop (* page-size (dec page))) (take page-size)) })
 
 (defroutes app
-  (GET "/" { { start :start size :size :or { start 0 size 10 } } :params }
-    (catalog (Integer. start) (Integer. size))))
+  (GET "/" { { page :page :or { page 1 } } :params }
+    (catalog (Integer. page))))
 
 (def handler
   (-> app
